@@ -1,8 +1,9 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { config } from 'src/config/config';
 import { AppModule } from './app.module';
+
+import { config } from 'src/config/config';
 
 async function bootstrap() {
   const logger = new Logger('MainGateway');
@@ -24,7 +25,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, documentBuilder);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(config.port);
   logger.log(`🚀 Main Gateway running on PORT: ${config.port}`);

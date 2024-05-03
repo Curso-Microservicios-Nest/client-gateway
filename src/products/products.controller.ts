@@ -2,18 +2,24 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { number } from 'joi';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Services } from 'src/enums/services.enum';
 
 @Controller('products')
 @ApiTags('Products')
 export class ProductsController {
-  constructor() {}
+  constructor(
+    @Inject(Services.PRODUCT) private readonly productsClient: ClientProxy,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new product' })
@@ -24,31 +30,31 @@ export class ProductsController {
 
   @Get()
   @ApiOperation({ summary: 'List all products' })
-  findAll() {
-    return 'This action returns all products';
+  findAll(@Query() pagination: PaginationDto) {
+    return this.productsClient.send({ cmd: 'findAll' }, pagination);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a product by ID' })
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return `This action returns a #${id} product ${number}`;
+    return `This action returns a #${id} product ${id}`;
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a product by ID' })
   update(@Param('id', ParseIntPipe) id: number) {
-    return `This action updates a #${id} product ${number}`;
+    return `This action updates a #${id} product ${id}`;
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a product by ID' })
   remove(@Param('id', ParseIntPipe) id: number) {
-    return `This action removes a #${id} product ${number}`;
+    return `This action removes a #${id} product ${id}`;
   }
 
   @Delete('soft-delete/:id')
   @ApiOperation({ summary: 'Soft delete a product by ID' })
   softRemove(@Param('id', ParseIntPipe) id: number) {
-    return `This action soft removes a #${id} product ${number}`;
+    return `This action soft removes a #${id} product ${id}`;
   }
 }
