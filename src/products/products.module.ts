@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { envs } from 'src/config';
-import { Services } from 'src/config/services.enum';
+import { config } from 'src/config/config';
+import { Services } from 'src/enums/services.enum';
 import { ProductsController } from './products.controller';
 
 @Module({
@@ -14,8 +14,8 @@ import { ProductsController } from './products.controller';
         name: Services.PRODUCT,
         transport: Transport.TCP,
         options: {
-          host: envs.microservices.products.host,
-          port: envs.microservices.products.port,
+          host: config.microservices.products.host,
+          port: config.microservices.products.port,
         },
       },
     ]),

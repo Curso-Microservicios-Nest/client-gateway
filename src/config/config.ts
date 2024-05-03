@@ -23,7 +23,7 @@ if (error) {
 
 const envVars: EnvVars = value;
 
-export const envs = {
+export const config = {
   port: envVars.PORT,
   microservices: {
     products: {
