@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -11,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Services } from 'src/enums/services.enum';
 
@@ -36,8 +38,14 @@ export class ProductsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a product by ID' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return `This action returns a #${id} product ${id}`;
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    try {
+      return await firstValueFrom(
+        this.productsClient.send({ cmd: 'findOne' }, { id }),
+      );
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Patch(':id')
