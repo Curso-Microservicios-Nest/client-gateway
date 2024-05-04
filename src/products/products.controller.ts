@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -10,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
@@ -44,7 +43,7 @@ export class ProductsController {
         this.productsClient.send({ cmd: 'findOne' }, { id }),
       );
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new RpcException(error);
     }
   }
 
