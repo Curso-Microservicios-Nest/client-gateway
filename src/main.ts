@@ -2,9 +2,9 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { config } from 'src/config/config';
 import { AppModule } from './app.module';
 import { RpcCustomExceptionFilter } from './common/exceptions/rpc-custom-exception.filter';
+import { envs } from './config';
 
 async function bootstrap() {
   const logger = new Logger('MainGateway');
@@ -28,7 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, documentBuilder);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(config.port);
-  logger.log(`🚀 Main Gateway running on PORT: ${config.port}`);
+  await app.listen(envs.port);
+  logger.log(`🚀 Main Gateway running on PORT: ${envs.port}`);
 }
 bootstrap();
