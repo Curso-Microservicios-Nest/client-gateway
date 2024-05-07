@@ -22,14 +22,22 @@ export class CreateOrderDto {
   @IsNotEmpty()
   readonly totalItems: number;
 
-  @ApiProperty({ description: 'Status of the order', example: 'PENDING' })
+  @ApiProperty({
+    description: 'Status of the order',
+    example: 'PENDING',
+    required: false,
+  })
   @IsEnum(OrderStatus, {
-    message: `Status must be one of the following: ${OrderStatus}`,
+    message: `Status must be a valid enum value: ${Object.values(OrderStatus).join(', ')}`,
   })
   @IsOptional()
   readonly status: OrderStatus = OrderStatus.PENDING;
 
-  @ApiProperty({ description: 'Paid status of the order', example: 'false' })
+  @ApiProperty({
+    description: 'Paid status of the order',
+    example: false,
+    required: false,
+  })
   @IsBoolean()
   @IsOptional()
   readonly paid: boolean = false;

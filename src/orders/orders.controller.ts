@@ -11,9 +11,9 @@ import {
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Services } from 'src/enums/services.enum';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { FilterOrdersDto } from './dto/filter-orders.dto';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -31,8 +31,8 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({ summary: 'List all orders' })
-  findAll(@Query() pagination: PaginationDto) {
-    return this.ordersClient.send('findAll', pagination);
+  findAll(@Query() filters: FilterOrdersDto) {
+    return this.ordersClient.send('findAll', filters);
   }
 
   @Get(':id')
