@@ -4,7 +4,7 @@ import {
   Get,
   Inject,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
 } from '@nestjs/common';
@@ -37,7 +37,7 @@ export class OrdersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get an order by ID' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     try {
       return await firstValueFrom(this.ordersClient.send('findOne', { id }));
     } catch (error) {
