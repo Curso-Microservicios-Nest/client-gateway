@@ -14,6 +14,8 @@ import { firstValueFrom } from 'rxjs';
 import { Services } from 'src/enums/services.enum';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { FilterOrdersDto } from './dto/filter-orders.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { StatusDto } from './dto/status.dto';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -33,6 +35,18 @@ export class OrdersController {
   @ApiOperation({ summary: 'List all orders' })
   findAll(@Query() filters: FilterOrdersDto) {
     return this.ordersClient.send('findAll', filters);
+  }
+
+  @Get('status/:status')
+  @ApiOperation({ summary: 'List all orders by status' })
+  async findAllByStatus(
+    @Param() statusDto: StatusDto,
+    @Query() pagination: PaginationDto,
+  ) {
+    return this.ordersClient.send('findAll', {
+      status: statusDto.status,
+      ...pagination,
+    });
   }
 
   @Get(':id')
