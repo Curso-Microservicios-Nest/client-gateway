@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 import { OrderStatus } from '../enums/order.enum';
 
 export class StatusDto {
@@ -11,6 +11,6 @@ export class StatusDto {
   @IsEnum(OrderStatus, {
     message: `Status must be a valid enum value: ${Object.values(OrderStatus).join(', ')}`,
   })
-  @IsOptional()
+  @IsNotEmpty()
   status?: OrderStatus;
 }

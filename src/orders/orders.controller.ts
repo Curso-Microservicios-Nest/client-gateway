@@ -5,16 +5,17 @@ import {
   Inject,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Services } from 'src/enums/services.enum';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { FilterOrdersDto } from './dto/filter-orders.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { StatusDto } from './dto/status.dto';
 
 @Controller('orders')
@@ -54,6 +55,22 @@ export class OrdersController {
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     try {
       return await firstValueFrom(this.ordersClient.send('findOne', { id }));
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update an order status' })
+  changeStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() statusDto: StatusDto,
+  ) {
+    try {
+      return this.ordersClient.send('changeStatus', {
+        id,
+        status: statusDto.status,
+      });
     } catch (error) {
       throw new RpcException(error);
     }
