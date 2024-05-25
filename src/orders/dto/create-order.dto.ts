@@ -1,44 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-} from 'class-validator';
-import { OrderStatus } from '../enums/order.enum';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, ValidateNested } from 'class-validator';
+import { OrderItemDto } from './order-item.dto';
 
 export class CreateOrderDto {
-  @ApiProperty({ description: 'Id of the user', example: 1000 })
-  @IsPositive()
-  @IsNumber()
-  @IsNotEmpty()
-  readonly totalAmount: number;
-
-  @ApiProperty({ description: 'Total items in the order', example: 3 })
-  @IsPositive()
-  @IsNumber()
-  @IsNotEmpty()
-  readonly totalItems: number;
-
   @ApiProperty({
-    description: 'Status of the order',
-    example: 'PENDING',
-    required: false,
+    description: 'List of items to order',
+    type: [OrderItemDto],
+    required: true,
   })
-  @IsEnum(OrderStatus, {
-    message: `Status must be a valid enum value: ${Object.values(OrderStatus).join(', ')}`,
-  })
-  @IsOptional()
-  readonly status: OrderStatus = OrderStatus.PENDING;
-
-  @ApiProperty({
-    description: 'Paid status of the order',
-    example: false,
-    required: false,
-  })
-  @IsBoolean()
-  @IsOptional()
-  readonly paid: boolean = false;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => OrderItemDto)
+  items: OrderItemDto[];
 }
