@@ -21,13 +21,4 @@ export class OrderItemDto {
   @IsPositive()
   @IsNotEmpty()
   quantity: number;
-
-  @ApiProperty({
-    description: 'Price of the product',
-    example: 1000.0,
-    required: true,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  price: number;
 }
