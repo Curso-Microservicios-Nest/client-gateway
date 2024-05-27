@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { envs } from 'src/config';
-import { Services } from 'src/enums/services.enum';
+import { Services } from 'src/config/services.enum';
 import { OrdersController } from './orders.controller';
 
 @Module({

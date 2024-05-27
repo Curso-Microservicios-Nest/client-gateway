@@ -13,7 +13,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { Services } from 'src/enums/services.enum';
+import { Services } from 'src/config/services.enum';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { FilterOrdersDto } from './dto/filter-orders.dto';
 import { StatusDto } from './dto/status.dto';
