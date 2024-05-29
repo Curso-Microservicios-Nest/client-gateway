@@ -22,29 +22,27 @@ import { UpdateProductDto } from './dto/update-product.dto';
 @ApiTags('Products')
 export class ProductsController {
   constructor(
-    @Inject(Services.PRODUCT) private readonly productsClient: ClientProxy,
+    @Inject(Services.NATS_SERVICE) private readonly client: ClientProxy,
   ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new product' })
   @ApiCreatedResponse({ description: 'Product created successfully' })
   async create(@Body() createProduct: CreateProductDto) {
-    return this.productsClient.send({ cmd: 'create' }, createProduct);
+    return this.client.send({ cmd: 'create' }, createProduct);
   }
 
   @Get()
   @ApiOperation({ summary: 'List all products' })
   findAll(@Query() pagination: PaginationDto) {
-    return this.productsClient.send({ cmd: 'findAll' }, pagination);
+    return this.client.send({ cmd: 'findAll' }, pagination);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a product by ID' })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      return await firstValueFrom(
-        this.productsClient.send({ cmd: 'findOne' }, { id }),
-      );
+      return await firstValueFrom(this.client.send({ cmd: 'findOne' }, { id }));
     } catch (error) {
       throw new RpcException(error);
     }
@@ -58,7 +56,7 @@ export class ProductsController {
   ) {
     try {
       return await firstValueFrom(
-        this.productsClient.send({ cmd: 'update' }, { id, ...updateProduct }),
+        this.client.send({ cmd: 'update' }, { id, ...updateProduct }),
       );
     } catch (error) {
       throw new RpcException(error);
@@ -68,7 +66,7 @@ export class ProductsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a product by ID' })
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.productsClient.send({ cmd: 'remove' }, { id }).pipe(
+    return this.client.send({ cmd: 'remove' }, { id }).pipe(
       catchError((err) => {
         throw new RpcException(err);
       }),
@@ -78,7 +76,7 @@ export class ProductsController {
   @Delete('soft-delete/:id')
   @ApiOperation({ summary: 'Soft delete a product by ID' })
   softRemove(@Param('id', ParseIntPipe) id: number) {
-    return this.productsClient.send({ cmd: 'softRemove' }, { id }).pipe(
+    return this.client.send({ cmd: 'softRemove' }, { id }).pipe(
       catchError((err) => {
         throw new RpcException(err);
       }),
