@@ -34,8 +34,12 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({ summary: 'List all orders' })
-  findAll(@Query() filters: FilterOrdersDto) {
-    return this.client.send('findAll', filters);
+  async findAll(@Query() filters: FilterOrdersDto) {
+    try {
+      return await firstValueFrom(this.client.send('findAll', filters));
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 
   @Get('status/:status')
