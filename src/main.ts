@@ -7,7 +7,7 @@ import { RpcCustomExceptionFilter } from './common/exceptions/rpc-custom-excepti
 import { envs } from './config';
 
 async function bootstrap() {
-  const logger = new Logger('Main-Gateway');
+  const logger = new Logger('Client-Gateway');
 
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
@@ -29,6 +29,6 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(envs.port);
-  logger.log(`🚀 Main Gateway running on PORT: ${envs.port}`);
+  logger.log(`🚀 Running on PORT: ${envs.port}`);
 }
 bootstrap();
