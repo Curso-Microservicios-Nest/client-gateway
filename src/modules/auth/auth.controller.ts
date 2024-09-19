@@ -1,26 +1,34 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Inject, Post } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { Services } from 'src/enums';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
-  constructor() {}
+  constructor(
+    @Inject(Services.NATS_SERVICE) private readonly client: ClientProxy,
+  ) {}
 
   @Post('register')
+  @ApiOperation({ summary: 'Register a new user' })
   async registerUser() {
-    return 'User registered';
+    return this.client.send('auth.register.user', {});
   }
 
   @Post('login')
   async loginUser() {
-    return 'User logged in';
+    return this.client.send('auth.login.user', {});
   }
 
   @Post('logout')
   async logoutUser() {
-    return 'User logged out';
+    return this.client.send('auth.logout.user', {});
   }
 
   @Get('verify')
   async verifyUser() {
-    return 'User verified';
+    return this.client.send('auth.verify.user', {});
   }
 }
