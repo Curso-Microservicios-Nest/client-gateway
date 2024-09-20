@@ -1,8 +1,9 @@
-import { Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { Services } from 'src/enums';
+import { LoginUserDto, RegisterUserDto } from './dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -13,13 +14,13 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  async registerUser() {
-    return this.client.send('auth.register.user', {});
+  async registerUser(@Body() registerUser: RegisterUserDto) {
+    return this.client.send('auth.register.user', registerUser);
   }
 
   @Post('login')
-  async loginUser() {
-    return this.client.send('auth.login.user', {});
+  async loginUser(@Body() loginUser: LoginUserDto) {
+    return this.client.send('auth.login.user', loginUser);
   }
 
   @Post('logout')
