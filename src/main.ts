@@ -23,6 +23,7 @@ async function bootstrap() {
     .setTitle('Client Gateway')
     .setDescription('The Client Gateway for microservices')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, documentBuilder);

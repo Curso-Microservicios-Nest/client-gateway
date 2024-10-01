@@ -6,10 +6,13 @@ import {
   HttpStatus,
   Inject,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -17,9 +20,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+import { firstValueFrom } from 'rxjs';
 import { Services } from 'src/enums';
 import { LoginUserDto, RegisterUserDto } from './dto';
-import { firstValueFrom } from 'rxjs';
+import { JwtAuthGuard } from './guards';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -51,13 +55,14 @@ export class AuthController {
     return this.client.send('auth.login.user', loginUser);
   }
 
-  @Post('logout')
-  async logoutUser() {
-    return this.client.send('auth.logout.user', {});
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Get('verify')
-  async verifyUser() {
-    return this.client.send('auth.verify.user', {});
+  @ApiOperation({ summary: 'Verify user' })
+  @ApiBearerAuth()
+  async verifyUser(@Req() req: Request) {
+    const user = req['user'];
+    const token = req['token'];
+    return { user, token };
+    // return this.client.send('auth.verify.user', {});
   }
 }
