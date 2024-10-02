@@ -59,9 +59,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('verify')
   @ApiOperation({ summary: 'Verify user' })
+  @ApiOkResponse({ description: 'User verified successfully' })
+  @ApiUnauthorizedResponse({ description: 'Invalid token' })
   @ApiBearerAuth()
   async verifyUser(@User() user: CurrentUser, @Token() token: string) {
-    return { user, token };
-    // return this.client.send('auth.verify.user', {});
+    return this.client.send('auth.verify.user', token);
   }
 }
