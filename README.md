@@ -38,7 +38,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## 🐳 Docker - NATS
+## 🐳 Docker
 
 ```sh
 # Crear el contenedor de NATS
